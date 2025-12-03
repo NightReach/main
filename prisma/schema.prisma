@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role     @default(PUBLISHER)
+  createdAt DateTime @default(now())
+  offers    Offer[]  @relation("UserOffers")
+  domains   Domain[]
+}
+
+model Offer {
+  id           Int    @id @default(autoincrement())
+  title        String
+  description  String
+  payout       Float
+  advertiser   User   @relation("UserOffers", fields: [advertiserId], references: [id])
+  advertiserId Int
+
+  clicks      Click[]
+  conversions Conversion[]
+}
+
+model Domain {
+  id        Int      @id @default(autoincrement())
+  url       String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  clicks    Click[]
+  createdAt DateTime @default(now())
+  verified  Boolean  @default(false)
+}
+
+model Click {
+  id      Int   @id @default(autoincrement())
+  offerId Int
+  offer   Offer @relation(fields: [offerId], references: [id])
+
+  domainId Int?
+  domain   Domain? @relation(fields: [domainId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  conversions Conversion[] // <-- FIXED: opposite side of Conversion.click
+}
+
+model Conversion {
+  id      Int   @id @default(autoincrement())
+  offerId Int
+  offer   Offer @relation(fields: [offerId], references: [id])
+
+  clickId Int?
+  click   Click? @relation(fields: [clickId], references: [id]) // <-- OK NOW
+
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADVERTISER
+  PUBLISHER
+}
