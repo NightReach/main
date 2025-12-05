@@ -8,20 +8,20 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
-  role     String // advertiser | publisher
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String   @default("ADVERTISER") // "ADVERTISER" or "PUBLISHER"
+  name      String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  // Advertiser offers
-  offers Offer[]
-
-  // Publisher domains
-  domains Domain[]
-
-  // Publisher clicks  <-- FIX
-  clicks Click[]
+  offers   Offer[]
+  domains  Domain[]
+  clicks   Click[]
 }
+
 
 model Offer {
   id           Int     @id @default(autoincrement())
