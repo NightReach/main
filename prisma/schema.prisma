@@ -4,65 +4,79 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  role      Role     @default(PUBLISHER)
-  createdAt DateTime @default(now())
-  offers    Offer[]  @relation("UserOffers")
-  domains   Domain[]
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     String // advertiser | publisher
+
+  // Advertiser offers
+  offers Offer[]
+
+  // Publisher domains
+  domains Domain[]
+
+  // Publisher clicks  <-- FIX
+  clicks Click[]
 }
 
 model Offer {
-  id           Int    @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   title        String
-  description  String
   payout       Float
-  advertiser   User   @relation("UserOffers", fields: [advertiserId], references: [id])
   advertiserId Int
+  landingUrl   String?
+
+  advertiser User @relation(fields: [advertiserId], references: [id])
 
   clicks      Click[]
   conversions Conversion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Domain {
-  id        Int      @id @default(autoincrement())
-  url       String   @unique
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  id          Int    @id @default(autoincrement())
+  domain      String
+  publisherId Int
+
+  publisher User    @relation(fields: [publisherId], references: [id])
   clicks    Click[]
-  createdAt DateTime @default(now())
-  verified  Boolean  @default(false)
 }
 
 model Click {
-  id      Int   @id @default(autoincrement())
+  id      Int     @id @default(autoincrement())
+  clickId String? @unique
+  offer   Offer   @relation(fields: [offerId], references: [id])
   offerId Int
-  offer   Offer @relation(fields: [offerId], references: [id])
 
-  domainId Int?
-  domain   Domain? @relation(fields: [domainId], references: [id])
+  publisher   User @relation(fields: [publisherId], references: [id])
+  publisherId Int
 
+  ipAddress String?
+  userAgent String?
+  subid     String?
+  source    String?
   createdAt DateTime @default(now())
 
-  conversions Conversion[] // <-- FIXED: opposite side of Conversion.click
+  Domain   Domain? @relation(fields: [domainId], references: [id])
+  domainId Int?
+
+  Conversion Conversion[]
 }
 
 model Conversion {
-  id      Int   @id @default(autoincrement())
-  offerId Int
-  offer   Offer @relation(fields: [offerId], references: [id])
-
-  clickId Int?
-  click   Click? @relation(fields: [clickId], references: [id]) // <-- OK NOW
-
+  id        Int      @id @default(autoincrement())
+  clickId   String?
+  offerId   Int
+  payout    Decimal  @default(0)
   createdAt DateTime @default(now())
+
+  click     Click?   @relation(fields: [clickId], references: [clickId])
+  offer     Offer    @relation(fields: [offerId], references: [id])
 }
 
-enum Role {
-  ADVERTISER
-  PUBLISHER
-}
