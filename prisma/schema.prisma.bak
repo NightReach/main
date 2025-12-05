@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Click {
+  id           Int          @id @default(autoincrement())
+  offerId      Int
+  smartlinkId  Int?
+  ip           String?
+  geo          String?
+  device       String?
+  createdAt    DateTime     @default(now())
+
+  conversion   Conversion?
+}
+
+model Offer {
+  id           Int     @id @default(autoincrement())
+  title        String
+  payout       Float
+  advertiserId Int
+  landingUrl   String?
+
+  advertiser User @relation(fields: [advertiserId], references: [id])
+
+  clicks      Click[]
+  conversions Conversion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Domain {
+  id          Int    @id @default(autoincrement())
+  domain      String
+  publisherId Int
+
+  publisher User    @relation(fields: [publisherId], references: [id])
+  clicks    Click[]
+}
+
+model Click {
+  id      Int     @id @default(autoincrement())
+  clickId String? @unique
+  offer   Offer   @relation(fields: [offerId], references: [id])
+  offerId Int
+
+  publisher   User @relation(fields: [publisherId], references: [id])
+  publisherId Int
+
+  ipAddress String?
+  userAgent String?
+  subid     String?
+  source    String?
+  createdAt DateTime @default(now())
+
+  Domain   Domain? @relation(fields: [domainId], references: [id])
+  domainId Int?
+
+  Conversion Conversion[]
+}
+
+model Conversion {
+  id           Int        @id @default(autoincrement())
+  clickId      Int        @unique
+  payout       Float
+  status       String     @default("approved")
+  createdAt    DateTime   @default(now())
+
+  click        Click      @relation(fields: [clickId], references: [id])
+}
+
+model FraudLog {
+  id          Int       @id @default(autoincrement())
+  clickId     Int?
+  reason      String
+  ip          String?
+  userAgent   String?
+  createdAt   DateTime  @default(now())
+}

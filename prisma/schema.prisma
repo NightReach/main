@@ -1,82 +1,112 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"  // or "postgresql"
+  url = env("DATABASE_URL")
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  role      String   @default("ADVERTISER") // "ADVERTISER" or "PUBLISHER"
-  name      String?
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  offers   Offer[]
-  domains  Domain[]
-  clicks   Click[]
-}
-
-
-model Offer {
-  id           Int     @id @default(autoincrement())
-  title        String
-  payout       Float
-  advertiserId Int
-  landingUrl   String?
-
-  advertiser User @relation(fields: [advertiserId], references: [id])
-
-  clicks      Click[]
-  conversions Conversion[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  password String
+  role String @default("PUBLISHER")
+  domains Domain[]
+  smartLinks SmartLink[]
+postbackSecret String?
 }
 
 model Domain {
-  id          Int    @id @default(autoincrement())
-  domain      String
+  id Int @id @default(autoincrement())
   publisherId Int
+  domain String
+  verificationToken String
+  verified Boolean @default(false)
+  createdAt DateTime @default(now())
+  publisher User @relation(fields:[publisherId], references:[id])
+}
 
-  publisher User    @relation(fields: [publisherId], references: [id])
-  clicks    Click[]
+model SmartLink {
+  id Int @id @default(autoincrement())
+  name String
+  publisherId Int
+  fallbackUrl String
+  createdAt DateTime @default(now())
+  publisher User @relation(fields:[publisherId], references:[id])
+  click Click[]
 }
 
 model Click {
-  id      Int     @id @default(autoincrement())
-  clickId String? @unique
-  offer   Offer   @relation(fields: [offerId], references: [id])
-  offerId Int
-
-  publisher   User @relation(fields: [publisherId], references: [id])
-  publisherId Int
-
-  ipAddress String?
-  userAgent String?
-  subid     String?
-  source    String?
+  id Int @id @default(autoincrement())
+  smartlinkId Int?
+  offerId Int?
+  ip String?
+  geo String?
+  device String?
   createdAt DateTime @default(now())
-
-  Domain   Domain? @relation(fields: [domainId], references: [id])
-  domainId Int?
-
-  Conversion Conversion[]
+  smartlink SmartLink? @relation(fields:[smartlinkId], references:[id])
+  conversion Conversion?
 }
 
 model Conversion {
-  id        Int      @id @default(autoincrement())
-  clickId   String?
-  offerId   Int
-  payout    Decimal  @default(0)
+  id Int @id @default(autoincrement())
+  clickId Int @unique
+  payout Float @default(0)
+  status String @default("approved")
   createdAt DateTime @default(now())
+  click Click @relation(fields:[clickId], references:[id])
+}
+model SmartLink {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  publisherId Int
+  vertical    String?
+  fallbackUrl String?
+  createdAt   DateTime  @default(now())
 
-  click     Click?   @relation(fields: [clickId], references: [clickId])
-  offer     Offer    @relation(fields: [offerId], references: [id])
+  publisher User @relation(fields: [publisherId], references: [id])
+  offers    SmartLinkOffer[]
+
+  clicks      Click[]
+  conversions Conversion[]
 }
 
+model SmartLinkOffer {
+  id          Int       @id @default(autoincrement())
+  smartLinkId Int
+  offerId     Int
+  weight      Int       @default(1)
+
+  smartlink SmartLink @relation(fields: [smartLinkId], references: [id])
+  offer      Offer    @relation(fields: [offerId], references: [id])
+}
+
+
+model Click {
+  id          Int      @id @default(autoincrement())
+  smartLinkId Int
+  offerId     Int
+  ip          String?
+  userAgent   String?
+  country     String?
+  device      String?
+  createdAt   DateTime @default(now())
+
+  smartlink SmartLink @relation(fields: [smartLinkId], references: [id])
+  offer     Offer     @relation(fields: [offerId], references: [id])
+}
+
+
+model Impression {
+  id        Int      @id @default(autoincrement())
+  clickId   Int
+  click     Click    @relation(fields: [clickId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  id        Int    @id @default(autoincrement())
+  key       String @unique
+  value     String
+}
