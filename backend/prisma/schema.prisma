@@ -1,0 +1,48 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  password  String
+  role      String     @default("PUBLISHER")
+  createdAt DateTime   @default(now())
+
+  websites  Website[]
+  campaigns Campaign[]
+}
+
+model Website {
+  id
+  userId          // publisher
+  domain
+  reviveWebsiteId // manually created in Revive
+  createdAt
+}
+
+model Zone {
+  id        String   @id @default(cuid())
+  name      String
+  width     Int
+  height    Int
+  websiteId String
+  createdAt DateTime @default(now())
+
+  website   Website  @relation(fields: [websiteId], references: [id])
+}
+
+model Campaign {
+  id        String   @id @default(cuid())
+  name      String
+  status    String   @default("ACTIVE")
+  userId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+}
