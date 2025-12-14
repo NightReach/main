@@ -1,0 +1,94 @@
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_account_preference_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table account_preference_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_account_user_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table account_user_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_account_user_permission_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table account_user_permission_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_accounts
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table accounts
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_acls
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table acls
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_acls_channel
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table acls_channel
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_ad_category_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table ad_category_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_ad_zone_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table ad_zone_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_affiliates
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table affiliates
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_affiliates_extra
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table affiliates_extra
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_agency
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table agency
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_application_variable
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table application_variable
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_audit
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table audit
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_banners
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table banners
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_campaigns
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table campaigns
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_campaigns_trackers
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table campaigns_trackers
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_category
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table category
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_channel
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table channel
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_clients
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table clients
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_intermediate_ad
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_intermediate_ad
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_intermediate_ad_connection
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_intermediate_ad_connection
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_intermediate_ad_variable_value
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_intermediate_ad_variable_value
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_raw_ad_click
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_raw_ad_click
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_raw_ad_impression
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_raw_ad_impression
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_raw_ad_request
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_raw_ad_request
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_raw_tracker_impression
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_raw_tracker_impression
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_raw_tracker_variable_value
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_raw_tracker_variable_value
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_summary_ad_hourly
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_summary_ad_hourly
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_summary_ad_zone_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_summary_ad_zone_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_summary_channel_daily
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_summary_channel_daily
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_data_summary_zone_impression_history
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table data_summary_zone_impression_history
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_images
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table images
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_log_maintenance_forecasting
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table log_maintenance_forecasting
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_log_maintenance_priority
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table log_maintenance_priority
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_log_maintenance_statistics
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table log_maintenance_statistics
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_password_recovery
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table password_recovery
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_placement_zone_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table placement_zone_assoc
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_preferences
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table preferences
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_session
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table session
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_targetstats
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table targetstats
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_tracker_append
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table tracker_append
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_trackers
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table trackers
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_userlog
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table userlog
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_users
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table users
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_variable_publisher
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table variable_publisher
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_variables
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table variables
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop table rv_zones
+Dec 08 14:46:44 +0530 OX-6936e4d49ef6f [    error]  Unable to drop the table zones

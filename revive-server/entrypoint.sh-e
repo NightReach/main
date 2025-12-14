@@ -1,0 +1,6 @@
+if [ -n "$DB_HOST" ]; then
+  echo "Waiting for database at $DB_HOST..."
+  until php -r "new mysqli(getenv('DB_HOST'), getenv('DB_USER'), getenv('DB_PASS'))" 2>/dev/null; do
+    sleep 2
+  done
+fi

@@ -1,0 +1,22 @@
+Installation started 2025-12-08 14:46:44
+Attempting to connect to database revive with user root
+Connected to database revive
+Database settings and permissions are OK
+creating upgrade_action audit table
+successfully created upgrade_action audit table
+creating database_action audit table
+successfully created database_action audit table
+schema definition from cache TRUE
+Installation created the core tables
+Installation updated the schema version to 628
+Installation updated the application version to 6.0.4
+=========================================================================
+Attempting to detect an existing Openads (aka. phpAdsNew) installation...
+PAN not detected
+Attempting to detect an existing Openads (aka. Max Media Manager 0.1) installation...
+MMM v0.1 not detected
+Attempting to detect an existing Openads (aka. Max Media Manager 0.3) installation...
+MMM v0.3 not detected
+Attempting to detect an existing Revive Adserver installation...
+Revive Adserver 6.0.4 detected
+This version is up to date.

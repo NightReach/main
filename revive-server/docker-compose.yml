@@ -1,0 +1,28 @@
+services:
+  db:
+    image: mariadb:10.5
+    container_name: revive-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: revive
+      MYSQL_USER: revive
+      MYSQL_PASSWORD: revive123
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+  revive:
+    build: .
+    container_name: revive
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: revive
+      DB_USER: revive
+      DB_PASS: revive123
+    depends_on:
+      - db
+    volumes:
+      - ./www:/var/www/html   # <-- IMPORTANT: MOUNT YOUR REVIVE 6 CODE
