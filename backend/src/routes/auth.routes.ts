@@ -5,6 +5,8 @@ import { signToken } from "../auth/jwt";
 
 const router = Router();
 
+const ALLOWED_ROLES = ["ADMIN", "PUBLISHER", "ADVERTISER"] as const;
+
 router.post("/register", async (req, res) => {
   const { email, password, role } = req.body;
 
@@ -12,7 +14,14 @@ router.post("/register", async (req, res) => {
     return res.status(400).json({ error: "Missing fields" });
   }
 
-  const exists = await prisma.user.findUnique({ where: { email } });
+  if (role && !ALLOWED_ROLES.includes(role)) {
+    return res.status(400).json({ error: "Invalid role" });
+  }
+
+  const exists = await prisma.user.findUnique({
+    where: { email },
+  });
+
   if (exists) {
     return res.status(409).json({ error: "User already exists" });
   }
@@ -25,7 +34,10 @@ router.post("/register", async (req, res) => {
     },
   });
 
-  const token = signToken({ id: user.id, role: user.role });
+  const token = signToken({
+    id: user.id,
+    role: user.role,
+  });
 
   res.json({ token });
 });
@@ -33,7 +45,14 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  if (!email || !password) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
   if (!user) {
     return res.status(401).json({ error: "Invalid credentials" });
   }
@@ -43,7 +62,10 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ error: "Invalid credentials" });
   }
 
-  const token = signToken({ id: user.id, role: user.role });
+  const token = signToken({
+    id: user.id,
+    role: user.role,
+  });
 
   res.json({ token });
 });

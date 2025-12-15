@@ -1,9 +1,16 @@
 import { Router } from "express";
-import { addWebsite } from "../controllers/website.controller";
-import { requireAuth } from "../middleware/auth.middleware";
+import {
+  addWebsite,
+  listWebsites,
+} from "../controllers/website.controller";
+import { authMiddleware } from "../middleware/auth.middleware";
 
 const router = Router();
 
-router.post("/", requireAuth, addWebsite);
+router.post("/", authMiddleware, addWebsite);
+router.get("/", authMiddleware, listWebsites);
+import { listWebsiteZones } from "../controllers/website.controller";
+
+router.get("/:websiteId/zones", authMiddleware, listWebsiteZones);
 
 export default router;

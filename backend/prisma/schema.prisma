@@ -8,41 +8,116 @@ generator client {
 }
 
 model User {
-  id        String     @id @default(cuid())
-  email     String     @unique
+  id        String   @id @default(cuid())
+  email     String   @unique
   password  String
-  role      String     @default("PUBLISHER")
-  createdAt DateTime   @default(now())
+  role      String // ← FIXED (was enum)
+  createdAt DateTime @default(now())
 
   websites  Website[]
   campaigns Campaign[]
 }
 
 model Website {
-  id
-  userId          // publisher
-  domain
-  reviveWebsiteId // manually created in Revive
-  createdAt
+  id              String   @id @default(cuid())
+  domain          String
+  reviveWebsiteId Int
+  userId          String
+  createdAt       DateTime @default(now())
+
+  user  User    @relation(fields: [userId], references: [id]) // ✅ FIX
+  zones Zone[] // ✅ opposite of Zone.website
+  Click Click[]
 }
 
 model Zone {
-  id        String   @id @default(cuid())
-  name      String
-  width     Int
-  height    Int
-  websiteId String
-  createdAt DateTime @default(now())
+  id           String   @id @default(cuid())
+  websiteId    String
+  reviveZoneId Int
+  width        Int
+  height       Int
+  createdAt    DateTime @default(now())
 
-  website   Website  @relation(fields: [websiteId], references: [id])
+  website       Website        @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  campaignZones CampaignZone[]
+  Click         Click[]
+
+  @@index([websiteId])
 }
 
 model Campaign {
-  id        String   @id @default(cuid())
-  name      String
-  status    String   @default("ACTIVE")
-  userId    String
+  id     String @id @default(cuid())
+  userId String
+
+  name   String
+  status String @default("ACTIVE") // ACTIVE | PAUSED
+
+  reviveCampaignId Int
+
+  payoutType  String // CPC | CPA | CPM
+  payoutValue Float
+
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id])
+  user          User           @relation(fields: [userId], references: [id])
+  campaignZones CampaignZone[]
+  Click         Click[]
+  Conversion    Conversion[]
+}
+
+model CampaignZone {
+  id         String @id @default(cuid())
+  campaignId String
+  zoneId     String
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+  zone     Zone     @relation(fields: [zoneId], references: [id])
+
+  @@unique([campaignId, zoneId])
+}
+
+model Click {
+  id         String   @id @default(cuid())
+  campaignId String
+  zoneId     String
+  websiteId  String
+  ip         String
+  userAgent  String
+  referer    String?
+  createdAt  DateTime @default(now())
+
+  conversions Conversion[]
+  campaign    Campaign     @relation(fields: [campaignId], references: [id])
+  zone        Zone         @relation(fields: [zoneId], references: [id])
+  website     Website      @relation(fields: [websiteId], references: [id])
+}
+
+model Conversion {
+  id         String   @id @default(cuid())
+  campaignId String
+  clickId    String   @unique
+  payout     Float
+  createdAt  DateTime @default(now())
+
+  // 🔗 REQUIRED opposite relation
+  click    Click    @relation(fields: [clickId], references: [id])
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+}
+
+model DailyStat {
+  id   String   @id @default(cuid())
+  date DateTime
+
+  userId     String
+  campaignId String?
+  zoneId     String?
+
+  clicks      Int   @default(0)
+  conversions Int   @default(0)
+  revenue     Float @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@unique([date, userId, campaignId, zoneId])
+  @@index([userId, date])
 }
