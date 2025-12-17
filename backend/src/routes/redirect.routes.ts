@@ -29,6 +29,12 @@ router.get("/:zoneId", async (req, res) => {
 
   const campaign = zone.campaignZones[0].campaign;
 
+// 🚨 FORCE-PAUSE CHECK (THIS IS THE ONLY THING WE ADD)
+if (!campaign || campaign.forcePaused) {
+  return res.status(204).end(); // silently stop
+}
+  
+
   // 1️⃣ Log click
   const click = await prisma.click.create({
     data: {
@@ -40,6 +46,58 @@ router.get("/:zoneId", async (req, res) => {
       referer: req.headers.referer || null,
     },
   });
+// ---- FRAUD DETECTION (Phase 4.3 - Click Side) ----
+
+const ip = req.ip || "";
+const userAgent = req.headers["user-agent"] || "";
+
+// 1️⃣ IP repetition (same IP, same zone, same day)
+const ipClicksToday = await prisma.click.count({
+  where: {
+    ip,
+    zoneId: zone.id,
+    createdAt: {
+      gte: getDayStart(new Date()),
+    },
+  },
+});
+
+if (ipClicksToday >= 10) {
+  await prisma.fraudEvent.create({
+    data: {
+      type: "IP_REPEAT",
+      severity: 3,
+      zoneId: zone.id,
+      campaignId: campaign.id,
+      ip,
+      meta: JSON.stringify({ ipClicksToday }),
+    },
+  });
+}
+
+// 2️⃣ User-Agent repetition (same UA, same day)
+if (userAgent) {
+  const uaClicksToday = await prisma.click.count({
+    where: {
+      userAgent,
+      createdAt: {
+        gte: getDayStart(new Date()),
+      },
+    },
+  });
+
+  if (uaClicksToday >= 25) {
+    await prisma.fraudEvent.create({
+      data: {
+        type: "UA_REPEAT",
+        severity: 4,
+        campaignId: campaign.id,
+        userAgent,
+        meta: JSON.stringify({ uaClicksToday }),
+      },
+    });
+  }
+}
 
   // 2️⃣ Daily stats (SAFE & ATOMIC)
   await prisma.dailyStat.upsert({

@@ -77,20 +77,23 @@ export const advertiserStats = async (req: AuthRequest, res: Response) => {
  * Daily stats (used for charts)
  * GET /api/stats/daily
  */
+/**
+ * Daily stats (Phase 4.2)
+ * GET /api/stats/daily
+ */
 export const getDailyStats = async (req: AuthRequest, res: Response) => {
   const userId = req.user!.id;
   const role = req.user!.role;
 
-  const fromRaw = req.query.from
-    ? new Date(String(req.query.from))
-    : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const { startDate, endDate, campaignId, zoneId, websiteId } = req.query;
 
-  const toRaw = req.query.to
-    ? new Date(String(req.query.to))
-    : new Date();
+  const from = startDate
+    ? getDayStart(new Date(String(startDate)))
+    : getDayStart(new Date(Date.now() - 7 * 24 * 60 * 60 * 1000));
 
-  const from = getDayStart(fromRaw);
-  const to = getDayStart(toRaw);
+  const to = endDate
+    ? getDayStart(new Date(String(endDate)))
+    : getDayStart(new Date());
 
   const where: any = {
     date: {
@@ -99,20 +102,51 @@ export const getDailyStats = async (req: AuthRequest, res: Response) => {
     },
   };
 
+  // 🔐 Role enforcement
   if (role === "PUBLISHER") {
     where.userId = userId;
+    if (websiteId) where.websiteId = websiteId;
+    if (zoneId) where.zoneId = zoneId;
   }
 
   if (role === "ADVERTISER") {
-    where.campaign = {
-      userId,
-    };
+    where.userId = userId;
+    if (campaignId) where.campaignId = campaignId;
   }
 
+  if (role === "ADMIN") {
+    if (campaignId) where.campaignId = campaignId;
+    if (zoneId) where.zoneId = zoneId;
+    if (websiteId) where.websiteId = websiteId;
+  }
+
+  // 1️⃣ Time-series stats (for charts)
   const stats = await prisma.dailyStat.findMany({
     where,
     orderBy: { date: "asc" },
   });
 
-  res.json(stats);
+  // 2️⃣ Aggregated totals (Phase 4.2 requirement)
+  const agg = await prisma.dailyStat.aggregate({
+    where,
+    _sum: {
+      clicks: true,
+      conversions: true,
+      revenue: true,
+    },
+  });
+
+  const clicks = agg._sum.clicks || 0;
+  const revenue = agg._sum.revenue || 0;
+
+  // 3️⃣ Final response
+  return res.json({
+    stats,
+    totals: {
+      clicks,
+      conversions: agg._sum.conversions || 0,
+      revenue,
+      epc: clicks > 0 ? revenue / clicks : 0,
+    },
+  });
 };

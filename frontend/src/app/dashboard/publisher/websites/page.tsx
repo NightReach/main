@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
-import { useRequireAuth } from "@/lib/requireAuth";
+import { useAuth } from "@/lib/requireAuth";
 
 interface Website {
   id: string;
@@ -12,7 +12,7 @@ interface Website {
 }
 
 export default function WebsitesPage() {
-  useRequireAuth();
+  useAuth();
 
   const [websites, setWebsites] = useState<Website[]>([]);
   const [domain, setDomain] = useState("");

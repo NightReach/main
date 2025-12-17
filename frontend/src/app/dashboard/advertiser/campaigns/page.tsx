@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
-import { useRequireAuth } from "@/lib/requireAuth";
+import { useAuth } from "@/lib/requireAuth";
 
 interface Campaign {
   id: string;
@@ -15,7 +15,7 @@ interface Campaign {
 }
 
 export default function CampaignsPage() {
-  useRequireAuth();
+  useAuth();
 
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [name, setName] = useState("");
@@ -148,7 +148,7 @@ export default function CampaignsPage() {
 
                 <td className="p-3">
                   <a
-                    href="/dashboard/campaigns/attach"
+                    href="/dashboard/advertiser/campaigns/attach"
                     className="text-blue-600 hover:underline text-sm"
                   >
                     Attach

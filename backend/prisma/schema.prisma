@@ -7,16 +7,27 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  role      String // ← FIXED (was enum)
-  createdAt DateTime @default(now())
+////////////////////
+// USER & AUTH
+////////////////////
 
-  websites  Website[]
-  campaigns Campaign[]
+model User {
+  id            String                   @id @default(cuid())
+  email         String                   @unique
+  password      String
+  role          String // ADMIN | PUBLISHER | ADVERTISER
+  createdAt     DateTime                 @default(now())
+  emailVerified Boolean                  @default(false)
+  websites      Website[]
+  campaigns     Campaign[]
+  resetTokens   PasswordResetToken[]
+  emailTokens   EmailVerificationToken[]
+  isDisabled    Boolean  @default(false) // 👈 ADD THIS
 }
+
+////////////////////
+// WEBSITES & ZONES
+////////////////////
 
 model Website {
   id              String   @id @default(cuid())
@@ -25,9 +36,9 @@ model Website {
   userId          String
   createdAt       DateTime @default(now())
 
-  user  User    @relation(fields: [userId], references: [id]) // ✅ FIX
-  zones Zone[] // ✅ opposite of Zone.website
-  Click Click[]
+  user   User    @relation(fields: [userId], references: [id])
+  zones  Zone[]
+  clicks Click[]
 }
 
 model Zone {
@@ -40,29 +51,37 @@ model Zone {
 
   website       Website        @relation(fields: [websiteId], references: [id], onDelete: Cascade)
   campaignZones CampaignZone[]
-  Click         Click[]
+  clicks        Click[]
+  FraudEvent    FraudEvent[]
 
   @@index([websiteId])
 }
+
+////////////////////
+// CAMPAIGNS
+////////////////////
 
 model Campaign {
   id     String @id @default(cuid())
   userId String
 
-  name   String
-  status String @default("ACTIVE") // ACTIVE | PAUSED
-
+  name             String
+  status           String @default("ACTIVE") // ACTIVE | PAUSED
   reviveCampaignId Int
 
   payoutType  String // CPC | CPA | CPM
   payoutValue Float
 
+  forcePaused Boolean @default(false) // Phase 4.5
+
   createdAt DateTime @default(now())
 
-  user          User           @relation(fields: [userId], references: [id])
-  campaignZones CampaignZone[]
-  Click         Click[]
-  Conversion    Conversion[]
+  user           User             @relation(fields: [userId], references: [id])
+  campaignZones  CampaignZone[]
+  clicks         Click[]
+  conversions    Conversion[]
+  fraudEvents    FraudEvent[]
+  AdminActionLog AdminActionLog[]
 }
 
 model CampaignZone {
@@ -76,20 +95,26 @@ model CampaignZone {
   @@unique([campaignId, zoneId])
 }
 
+////////////////////
+// TRACKING
+////////////////////
+
 model Click {
-  id         String   @id @default(cuid())
+  id         String @id @default(cuid())
   campaignId String
   zoneId     String
   websiteId  String
-  ip         String
-  userAgent  String
-  referer    String?
-  createdAt  DateTime @default(now())
 
-  conversions Conversion[]
+  ip        String
+  userAgent String
+  referer   String?
+  createdAt DateTime @default(now())
+
   campaign    Campaign     @relation(fields: [campaignId], references: [id])
   zone        Zone         @relation(fields: [zoneId], references: [id])
   website     Website      @relation(fields: [websiteId], references: [id])
+  conversions Conversion[]
+  FraudEvent  FraudEvent[]
 }
 
 model Conversion {
@@ -99,10 +124,13 @@ model Conversion {
   payout     Float
   createdAt  DateTime @default(now())
 
-  // 🔗 REQUIRED opposite relation
   click    Click    @relation(fields: [clickId], references: [id])
   campaign Campaign @relation(fields: [campaignId], references: [id])
 }
+
+////////////////////
+// STATS
+////////////////////
 
 model DailyStat {
   id   String   @id @default(cuid())
@@ -120,4 +148,70 @@ model DailyStat {
 
   @@unique([date, userId, campaignId, zoneId])
   @@index([userId, date])
+}
+
+////////////////////
+// FRAUD & SAFETY
+////////////////////
+
+model FraudEvent {
+  id       String @id @default(cuid())
+  type     String // IP_REPEAT | UA_REPEAT | FAST_CONVERSION | CR_ANOMALY
+  severity Int // 1–5
+
+  userId     String?
+  campaignId String?
+  zoneId     String?
+  clickId    String?
+
+  ip        String?
+  userAgent String?
+  meta      String? // JSON string
+
+  createdAt DateTime @default(now())
+
+  campaign Campaign? @relation(fields: [campaignId], references: [id])
+  zone     Zone?     @relation(fields: [zoneId], references: [id])
+  click    Click?    @relation(fields: [clickId], references: [id])
+
+  @@index([type])
+  @@index([campaignId])
+  @@index([zoneId])
+}
+
+////////////////////
+// ADMIN AUDIT LOG
+////////////////////
+
+model AdminActionLog {
+  id         String   @id @default(cuid())
+  adminId    String
+  action     String // FORCE_PAUSE | FORCE_RESUME
+  campaignId String
+  reason     String?
+  createdAt  DateTime @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

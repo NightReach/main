@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
-import { useRequireAuth } from "@/lib/requireAuth";
+import { useAuth } from "@/lib/requireAuth";
 
 export default function AttachCampaignZonePage() {
-  useRequireAuth();
+  useAuth();
 
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [websites, setWebsites] = useState<any[]>([]);

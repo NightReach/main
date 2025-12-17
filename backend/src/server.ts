@@ -54,3 +54,28 @@ app.use("/postback", postbackRoutes);
 import statsRoutes from "./routes/stats.routes";
 
 app.use("/api/stats", statsRoutes);
+
+import adminRoutes from "./routes/admin.routes";
+
+app.use("/api/admin", adminRoutes);
+
+import debugRiskRoutes from "./routes/debugRisk";
+app.use("/debug", debugRiskRoutes);
+
+import authSignup from "./routes/authSignup";
+import authVerify from "./routes/authVerify";
+
+app.use("/api/auth", authSignup);
+app.use("/api/auth", authVerify);
+
+import adminUsers from "./routes/adminUsers";
+
+app.use("/api/admin", adminUsers);
+
+import adminCampaigns from "./routes/adminCampaigns";
+
+app.use("/api/admin", adminCampaigns);
+
+import adminFraud from "./routes/adminFraud";
+
+app.use("/api/admin", adminFraud);

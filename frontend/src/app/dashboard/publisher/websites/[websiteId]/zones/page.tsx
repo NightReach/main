@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import api from "@/lib/api";
-import { useRequireAuth } from "@/lib/requireAuth";
+import { useAuth } from "@/lib/requireAuth";
 
 interface Zone {
   id: string;
@@ -14,7 +14,7 @@ interface Zone {
 }
 
 export default function ZonesPage() {
-  useRequireAuth();
+  useAuth();
 
   const { websiteId } = useParams();
   const [zones, setZones] = useState<Zone[]>([]);
